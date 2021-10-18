@@ -19,15 +19,17 @@ Lorsqu'il reçoit un message d'un client, il met à jour son état interne.
 ## Exemple de format JSON
 ```json
 {
-    "game" : [
+    "game" : {
         "dimension_x" : 20,
         "dimension_y" : 20,
-    ],
+    },
     "objects" : [
         {
             "kind" : "player",
+            "name" : "Joueur1",
             "x" : 0,
             "y" : 1,
+            "counter_sweet" : 0,
         },
         {
             "kind" : "sweet",
@@ -41,5 +43,4 @@ Lorsqu'il reçoit un message d'un client, il met à jour son état interne.
         },
     ]
 }
-
 ```
