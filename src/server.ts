@@ -19,15 +19,12 @@ function handleIndex(ctx:RouterContext){
   ctx.render(`${Deno.cwd()}/public/views/index.ejs`, {data: {nom: 'Léo'}});
 }
 
-
 // Routes
 const router = new Router();
 router.get('/',handleIndex);
-// router.get('/static/:path+',handleStatic);
 
 app.use(router.routes());
 app.use(router.allowedMethods());
-
 app.use(async (context) => {
   await send(context, context.request.url.pathname, {
     root: `${Deno.cwd()}/public`,
@@ -36,26 +33,24 @@ app.use(async (context) => {
 
 // Initialisation des variables de jeu
 const gameworld = new GameWorld();
-const PLAYERS:WebSocketClient[] = [];
 const wss = new WebSocketServer(8080);
 
 // Fonctions auxiliaires
 function sendAll(message:string) {
-  for (let i=0; i<PLAYERS.length; i++) {
-    PLAYERS[i].send("Message: " + message);
+  for (const player of gameworld.get_players()) {
+    if (player.ws !== undefined) {
+      player.ws.send(message);
+    }
   }
 }
 
 // Nouvelle Connexion
 wss.on("connection", function (ws: WebSocketClient) {
-  // Ajout du joueur à la liste
-  PLAYERS.push(ws)
-  gameworld.add_player("TODO")
-  sendAll(JSON.stringify(gameworld.to_json()));
+  log.info("Nouveau visiteur !");
   // Nouveau message
   ws.on("message", function (message: string) {
     // Gestion du message et de ses effets puis génération d'un JSON.
-    const result = manageSocketMessage(message,gameworld);
+    const result = manageSocketMessage(message,ws,gameworld);
     // On envoi le JSON à toutes les joueurs de la partie.
     sendAll(JSON.stringify(result));
   });
