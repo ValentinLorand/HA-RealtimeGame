@@ -1,12 +1,14 @@
 # Spécification des message socket
 
 ## Client -> serveur (test)
-    
-Demandes de déplacement:
-ask_move_up
-ask_move_down
-ask_move_right
-ask_move_left
+
+create_game -> Création d'une nouvelle partie
+join_game -> Rejoindre une partie en cours
+
+ask_move_up -> Demande d'un déplacement vers le haut
+ask_move_down -> Demande d'un déplacement vers le bas
+ask_move_right -> Demande d'un déplacement vers la droite
+ask_move_left -> Demande d'un déplacement vers la gauche
 
 ## Serveur -> Client (JSON)
 
