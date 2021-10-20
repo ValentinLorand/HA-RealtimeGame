@@ -5,6 +5,6 @@ tasks:
     command: deno run --allow-net --allow-read --watch src/server.ts
 ports:
   - port: 8000
-    onOpen: open-browser
+    onOpen: open-preview
   - port: 8080
-    onOpen: notify
+    onOpen: ignore
