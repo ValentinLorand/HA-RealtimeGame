@@ -1,4 +1,4 @@
-const socket = new WebSocket("ws://127.0.0.1:8080");
+const socket = new WebSocket(`ws://${window.location.hostname}:8080`);
 
 socket.onopen = function(e) {
   alert("[open] Connection established");
