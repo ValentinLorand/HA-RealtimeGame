@@ -1,4 +1,12 @@
-const socket = new WebSocket("ws://127.0.0.1:8080");
+let websocketURI
+if (window.location.hostname.includes("8000")) {
+  // If app is ran in GitPod, websocket is at url 8080-<url>
+  websocketURI = `wss://${window.location.hostname.replace("8000", "8080")}`
+} else {
+  // If ran as a regular server, websocket is on same hostname, unsecure, port 8080
+  websocketURI = `ws://${window.location.hostname}:8080`
+}
+const socket = new WebSocket(websocketURI);
 
 socket.onopen = function(e) {
   alert("[open] Connection established");

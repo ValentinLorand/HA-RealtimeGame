@@ -1,0 +1,10 @@
+image:
+  file: .gitpod.Dockerfile
+tasks:
+  - name: Start server
+    command: deno run --allow-net --allow-read --watch src/server.ts
+ports:
+  - port: 8000
+    onOpen: open-preview
+  - port: 8080
+    onOpen: ignore
