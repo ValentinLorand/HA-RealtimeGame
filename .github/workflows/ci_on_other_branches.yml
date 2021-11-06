@@ -5,8 +5,12 @@ name: CI
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
-  push:
+  pull_request:
     branches: [ master ]
+  push:
+    branches:    
+      - '**'        # matches every branch
+      - '!master'   # except master
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -29,8 +33,3 @@ jobs:
       # Runs a single command using the runners shell
       - name: Unit test
         run: deno test
-        
-      - name: Action For Semantic Release
-        uses: cycjimmy/semantic-release-action@v2.6.0
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
