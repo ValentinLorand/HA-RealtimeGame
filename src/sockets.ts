@@ -19,6 +19,27 @@ export function manageSocketMessage(message:string, wsClient:WebSocketClient, ga
             gameworld.move_vertical(player,-1);
         }
     }
+    else if (message == "ask_move_down") {
+        // Prise en compte de la demande d'un mouvement vers le haut    
+        const player = gameworld.get_player_from_ws(wsClient);
+        if (player) {
+            gameworld.move_vertical(player,1);
+        }
+    }
+    else if (message == "ask_move_right") {
+        // Prise en compte de la demande d'un mouvement vers le haut    
+        const player = gameworld.get_player_from_ws(wsClient);
+        if (player) {
+            gameworld.move_horizontal(player,1);
+        }
+    }
+    else if (message == "ask_move_left") {
+        // Prise en compte de la demande d'un mouvement vers le haut    
+        const player = gameworld.get_player_from_ws(wsClient);
+        if (player) {
+            gameworld.move_horizontal(player,-1);
+        }
+    }
     else {
         log.warning('Message non compréhensible : ' + message)
     }
