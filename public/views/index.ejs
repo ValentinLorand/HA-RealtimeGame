@@ -5,9 +5,28 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>Eat My Sweet</title>
-    <script src="/static/js/client.js"></script>
+    <style>
+      html {
+        font-family: sans-serif;
+      }
+    </style>
   </head>
   <body>
-    <h1>Bonjour à toi <%= data.nom %></h1>
+    <h1>Welcome to Eat My Sweet</h1>
+    <p>
+      A basic game made with constraints for distributed systems's course at ESIR :
+      <ul>
+        <li>Realtime multiplayer</li>
+        <li>High availability (SPOF elimination, redundancy, failure detection)</li>
+        <li>Basic graphical interface</li>
+      </ul>
+    </p>
+    <svg id="cont" height="1000" width="1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      
+    </svg>
   </body>
+  <footer>
+    <script src="/static/js/game.js"></script>
+    <script src="/static/js/client.js"></script>
+  </footer>
 </html>

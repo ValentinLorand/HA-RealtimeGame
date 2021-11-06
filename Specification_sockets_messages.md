@@ -19,6 +19,7 @@ Lorsqu'il reçoit un message d'un client, il met à jour son état interne.
 
 
 ## Exemple de format JSON
+State : 
 ```json
 {
     "game" : {
