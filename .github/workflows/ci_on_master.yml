@@ -34,3 +34,5 @@ jobs:
         
       - name: Action For Semantic Release
         uses: cycjimmy/semantic-release-action@v2.6.0
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
