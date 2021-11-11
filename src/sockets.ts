@@ -41,7 +41,7 @@ export function manageSocketMessage(message:string, wsClient:WebSocketClient, ga
         }
     }
     else {
-        log.warning('Message non compréhensible : ' + message)
+        log.warning('Unknown message received : ' + message)
     }
 
     return new GameWorld().to_json();

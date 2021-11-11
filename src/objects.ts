@@ -4,11 +4,20 @@ export class GameWorld {
     dimension_x: number;
     dimension_y: number;
    
-    constructor(dimensionX=20,dimensionY=20,) {
+    constructor(dimensionX=20,dimensionY=20) {
         this.objects = []
         this.dimension_x = dimensionX;
         this.dimension_y = dimensionY;
-        for(let i = 0; i < 5; i++) {
+        this.generateSweets(5);
+        
+    }
+
+    /**
+     * Generator of sweet at a random free place on the game
+     * @param N the number of sweet to generate
+     */
+    private generateSweets(N:number) {
+        for(let i = 0; i < N; i++) {
             const randomX = Math.floor(Math.random() * this.dimension_x) +1;
             const randomY = Math.floor(Math.random() * this.dimension_y) +1;
             
@@ -20,15 +29,27 @@ export class GameWorld {
         }
     }
 
+    /**
+     * @param player The player to add to the game
+     */
     add_player(player:Player) : Player {
         this.objects.push(player);
         return player;
     }
 
+    /**
+     * 
+     * @param x the horizontal position of the object
+     * @param y the vertical position of the object
+     * @returns The object at the correcponding position or undefined
+     */
     get_object_from_pos(x:number,y:number) : SimpleObject|undefined {
         return this.objects.find(e => e.x === x && e.y === y);
     }
-
+    
+    /**
+     * @returns The number of players in the game
+     */
     number_player() : number {
         let counter = 0
         for (const i of this.objects) {
@@ -39,14 +60,24 @@ export class GameWorld {
         return counter;
     }
 
+    /**
+     * @returns The players in the game in an array
+     */
     get_players() : Player[] {
         return (this.objects.filter(i => i instanceof Player) as Player[]);
     }
 
+    /**
+     * @param ws a websocket instance
+     * @returns The player concerned by the websocket
+     */
     get_player_from_ws(ws:WebSocketClient) : Player|undefined {
         return (this.objects.find(e => e instanceof Player && e.ws === ws) as Player);
     }
 
+    /**
+     * @returns The number of swweets in the game
+     */
     number_sweet() : number {
         let counter = 0
         for (const i of this.objects) {
@@ -59,7 +90,7 @@ export class GameWorld {
 
     move_horizontal(player:Player,move:number) {
         if (player.x + move < this.dimension_x && player.x + move >= 0){
-            const potentielObjet = this.get_object_from_pos(player.x += move,player.y)
+            const potentielObjet = this.get_object_from_pos(player.x + move,player.y)
             if(potentielObjet instanceof Sweet) {
                 this.objects = this.objects.filter(o => o !== potentielObjet);
                 player.eat_sweet();
@@ -71,7 +102,7 @@ export class GameWorld {
 
     move_vertical(player:Player,move:number) {
         if (player.y + move < this.dimension_y && player.y + move >= 0){
-            const potentielObjet = this.get_object_from_pos(player.x, player.y += move)
+            const potentielObjet = this.get_object_from_pos(player.x, player.y + move)
             if(potentielObjet instanceof Sweet) {
                 this.objects = this.objects.filter(o => o !== potentielObjet);
                 player.eat_sweet();
@@ -79,9 +110,10 @@ export class GameWorld {
             player.move_vertical_player(move)
         }
     }
+
     reset() {
         this.objects = [];
-        //TODO recreate some sweets
+        this.generateSweets(5);
     }
    
     gameworld() {
