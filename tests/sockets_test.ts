@@ -1,13 +1,10 @@
-import { assertEquals } from "https://deno.land/std@0.112.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.114.0/testing/asserts.ts";
+import {delay} from "https://deno.land/std@0.114.0/async/mod.ts";
 import { GameWorldInstance } from "../src/server.ts";
-import * as log from "https://deno.land/std@0.111.0/log/mod.ts";
+import * as log from "https://deno.land/std@0.111.0/log/mod.ts"
 
-const loggerServer = log.getLogger("server")
-loggerServer.level = 20
-
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+const loggerServer = log.getLogger()
+loggerServer.level = 30
 
 Deno.test("Join Game", async () => {
   GameWorldInstance.reset();

@@ -1,12 +1,13 @@
 import * as log from "https://deno.land/std@0.111.0/log/mod.ts";
-import { Application,Router,RouterContext,send } from "https://deno.land/x/oak@v6.2.0/mod.ts"; //Dernière version 9.0.0 mais ne fonctionne pas
-import { adapterFactory,engineFactory,viewEngine } from "https://deno.land/x/view_engine@v1.4.5/mod.ts";
-import { WebSocketClient, WebSocketServer } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
+import { renderFile } from "https://deno.land/x/dejs@0.9.3/mod.ts";
+import { Application,Router,RouterContext,send } from "https://deno.land/x/oak@v9.0.1/mod.ts";
+import { adapterFactory,engineFactory,viewEngine } from "https://deno.land/x/view_engine@v1.5.0/mod.ts";
+import { WebSocketClient,WebSocketServer } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import { GameWorld } from "./objects.ts";
 import { manageSocketMessage } from "./sockets.ts";
 
-
-const logServer = log.getLogger("server")
+const logServer = log.getLogger();
+logServer.level = 10;
 /**
  * START THE WEB SERVER
  */
@@ -20,10 +21,13 @@ export async function startWebServer() {
   app.use(viewEngine(oakAdapter, ejsEngine));
 
   // Handlers
-  function handleIndex(ctx: RouterContext) {
-    ctx.render(`${Deno.cwd()}/public/views/index.ejs`, {
-      data: { nom: "Léo" },
-    });
+  async function handleIndex(ctx: RouterContext) {
+    ctx.response.body = await renderFile(
+      `${Deno.cwd()}/public/views/index.ejs`,
+      {
+        data: { nom: "Léo" },
+      },
+    );
   }
 
   // Routes
@@ -44,7 +48,7 @@ export async function startWebServer() {
 
 /**
  * START SOCKET SERVER
- */ 
+ */
 export function startSocketServer() {
   const wss = new WebSocketServer(8080);
 
@@ -77,4 +81,4 @@ export const GameWorldInstance = new GameWorld();
 // Start socket server
 startSocketServer();
 // Start web application
-startWebServer()
+startWebServer();
