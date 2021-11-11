@@ -15,10 +15,10 @@ cd HA-RealtimeGame
 deno run --allow-net --allow-read --watch src/server.ts
 ```
 
-## Lancement des tests
+## Run tests
 ```
 cd HA-RealtimeGame
-deno test
+deno test --allow-net
 ```
 
 Developed by Leo Rolland and Valentin Lorand.
