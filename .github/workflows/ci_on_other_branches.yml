@@ -32,4 +32,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Unit test
-        run: deno test
+        run: deno test --allow-net
