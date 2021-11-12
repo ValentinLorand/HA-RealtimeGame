@@ -45,6 +45,8 @@ function render(state) {
                 circle.setAttributeNS(null, 'style', 'fill:rgb(200,0,0)')
                 container.appendChild(circle);
                 break;
+            default:
+                break;
         }
     })
 

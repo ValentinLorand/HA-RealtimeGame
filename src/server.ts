@@ -3,7 +3,7 @@ import { renderFile } from "https://deno.land/x/dejs@0.9.3/mod.ts";
 import { Application,Router,RouterContext,send } from "https://deno.land/x/oak@v9.0.1/mod.ts";
 import { adapterFactory,engineFactory,viewEngine } from "https://deno.land/x/view_engine@v1.5.0/mod.ts";
 import { WebSocketClient,WebSocketServer } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
-import { GameWorld } from "./objects.ts";
+import { GameWorld } from "./game/GameWorld.ts";
 import { manageSocketMessage } from "./sockets.ts";
 
 const logServer = log.getLogger();
@@ -54,7 +54,7 @@ export function startSocketServer() {
 
   // Send a message to all players
   function sendAll(message: string) {
-    for (const player of GameWorldInstance.get_players()) {
+    for (const player of GameWorldInstance.getPlayers()) {
       if (player.ws !== undefined) {
         player.ws.send(message);
       }

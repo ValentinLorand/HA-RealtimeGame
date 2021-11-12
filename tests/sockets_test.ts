@@ -8,19 +8,19 @@ loggerServer.level = 30
 
 Deno.test("Join Game", async () => {
   GameWorldInstance.reset();
-  const testNbPlayerBefore = GameWorldInstance.number_player();
+  const testNbPlayerBefore = GameWorldInstance.getPlayers().length;
 
   // Player 1
   const socket = new WebSocket('ws://127.0.0.1:8080');
   socket.onopen = function() { socket.send('join_game');}
   await delay(200);
-  const testNbPlayerBetween = GameWorldInstance.number_player();
+  const testNbPlayerBetween = GameWorldInstance.getPlayers().length;
 
   // Player 1
   const socket2 = new WebSocket('ws://127.0.0.1:8080');
   socket2.onopen = function() { socket2.send('join_game'); } // BUG : One websocket can join 2 time the same game
   await delay(200);
-  const testNbPlayerAfter = GameWorldInstance.number_player();
+  const testNbPlayerAfter = GameWorldInstance.getPlayers().length;
 
   socket.close();
   socket2.close();
@@ -31,21 +31,21 @@ Deno.test("Join Game", async () => {
 
 Deno.test("Move up", async () => {
   GameWorldInstance.reset();
-  const testNbPlayerBefore = GameWorldInstance.number_player();
+  const testNbPlayerBefore = GameWorldInstance.getPlayers().length;
 
   // Player 1
   const socket = new WebSocket('ws://127.0.0.1:8080');
   socket.onopen = function() { socket.send('join_game'); }
   await delay(200);
 
-  let player = GameWorldInstance.get_players()[0]
+  let player = GameWorldInstance.getPlayers()[0]
   const x1 = player.x
   const y1 = player.y
-  const testNbPlayerAfter = GameWorldInstance.number_player();
+  const testNbPlayerAfter = GameWorldInstance.getPlayers().length;
 
   socket.send('ask_move_up');
   await delay(200);
-  player = GameWorldInstance.get_players()[0]
+  player = GameWorldInstance.getPlayers()[0]
   const x2 = player.x
   const y2 = player.y
 
@@ -58,21 +58,21 @@ Deno.test("Move up", async () => {
 
 Deno.test("Move down", async () => {
   GameWorldInstance.reset();
-  const testNbPlayerBefore = GameWorldInstance.number_player();
+  const testNbPlayerBefore = GameWorldInstance.getPlayers().length;
 
   // Player 1
   const socket = new WebSocket('ws://127.0.0.1:8080');
   socket.onopen = function() { socket.send('join_game'); }
   await delay(200);
 
-  let player = GameWorldInstance.get_players()[0]
+  let player = GameWorldInstance.getPlayers()[0]
   const x1 = player.x
   const y1 = player.y
-  const testNbPlayerAfter = GameWorldInstance.number_player();
+  const testNbPlayerAfter = GameWorldInstance.getPlayers().length;
 
   socket.send('ask_move_down');
   await delay(200);
-  player = GameWorldInstance.get_players()[0]
+  player = GameWorldInstance.getPlayers()[0]
   const x2 = player.x
   const y2 = player.y
 
@@ -85,21 +85,21 @@ Deno.test("Move down", async () => {
 
 Deno.test("Move left", async () => {
   GameWorldInstance.reset();
-  const testNbPlayerBefore = GameWorldInstance.number_player();
+  const testNbPlayerBefore = GameWorldInstance.getPlayers().length;
 
   // Player 1
   const socket = new WebSocket('ws://127.0.0.1:8080');
   socket.onopen = function() { socket.send('join_game'); }
   await delay(200);
 
-  let player = GameWorldInstance.get_players()[0]
+  let player = GameWorldInstance.getPlayers()[0]
   const x1 = player.x
   const y1 = player.y
-  const testNbPlayerAfter = GameWorldInstance.number_player();
+  const testNbPlayerAfter = GameWorldInstance.getPlayers().length;
 
   socket.send('ask_move_left');
   await delay(200);
-  player = GameWorldInstance.get_players()[0]
+  player = GameWorldInstance.getPlayers()[0]
   const x2 = player.x
   const y2 = player.y
 
@@ -112,21 +112,21 @@ Deno.test("Move left", async () => {
 
 Deno.test("Move right", async () => {
   GameWorldInstance.reset();
-  const testNbPlayerBefore = GameWorldInstance.number_player();
+  const testNbPlayerBefore = GameWorldInstance.getPlayers().length;
 
   // Player 1
   const socket = new WebSocket('ws://127.0.0.1:8080');
   socket.onopen = function() { socket.send('join_game'); }
   await delay(200);
 
-  let player = GameWorldInstance.get_players()[0]
+  let player = GameWorldInstance.getPlayers()[0]
   const x1 = player.x
   const y1 = player.y
-  const testNbPlayerAfter = GameWorldInstance.number_player();
+  const testNbPlayerAfter = GameWorldInstance.getPlayers().length;
 
   socket.send('ask_move_right');
   await delay(200);
-  player = GameWorldInstance.get_players()[0]
+  player = GameWorldInstance.getPlayers()[0]
   const x2 = player.x
   const y2 = player.y
 
