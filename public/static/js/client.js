@@ -9,24 +9,23 @@ if (window.location.hostname.includes("8000")) {
 const socket = new WebSocket(websocketURI);
 
 socket.onopen = function(e) {
-  alert("[open] Connection established");
-  socket.send("Bonjour à toi serveur");
+  console.log("[open] Connection established");
+  socket.send("join_game");
 };
 
 socket.onmessage = function(event) {
-  alert(`[message] Data received from server: ${event.data}`);
+  console.log(`[message] Data received from server: ${event.data}`);
+  render(JSON.parse(event.data))
 };
 
 socket.onclose = function(event) {
   if (event.wasClean) {
-    alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+    console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
   } else {
     // e.g. server process killed or network down
     // event.code is usually 1006 in this case
-    alert('[close] Connection died');
+    console.error('[close] Connection died');
   }
 };
 
-socket.onerror = function(error) {
-  alert(`[error] ${error.message}`);
-};
+socket.onerror = console.error

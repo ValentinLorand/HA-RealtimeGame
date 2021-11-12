@@ -44,5 +44,5 @@ export function manageSocketMessage(message:string, wsClient:WebSocketClient, ga
         log.warning('Unknown message received : ' + message)
     }
 
-    return new GameWorld().to_json();
+    return gameworld.to_json();
 }

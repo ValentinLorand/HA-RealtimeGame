@@ -2,6 +2,9 @@ const svgns = "http://www.w3.org/2000/svg"
 const container = document.getElementById( 'cont' );
 
 function render(state) {
+
+    // Cleaning board
+    container.innerHTML = ''
     
     const BOARD_CELL_SIZE = 5
     const CELL_X_SPACING = (container.clientWidth - 10) / state.game.dimension_x
@@ -46,29 +49,3 @@ function render(state) {
     })
 
 }
-
-render({
-    "game" : {
-        "dimension_x" : 20,
-        "dimension_y" : 20,
-    },
-    "objects" : [
-        {
-            "kind" : "player",
-            "name" : "Joueur1",
-            "x" : 0,
-            "y" : 1,
-            "counter_sweet" : 0,
-        },
-        {
-            "kind" : "sweet",
-            "x" : 5,
-            "y" : 6,
-        },
-        {
-            "kind" : "sweet",
-            "x" : 8,
-            "y" : 9,
-        },
-    ]
-})
