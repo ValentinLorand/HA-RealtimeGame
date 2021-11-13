@@ -4,16 +4,14 @@ import { SimpleObject } from "./SimpleObject.ts";
 
 export class Player extends SimpleObject {
     ws?: WebSocketClient;
+    secret: string;
     counter_sweet: number;
 
-    constructor(name: string, websocket?: WebSocketClient, x = 1, y = 1) {
+    constructor(name: string, secret: string,ws?:WebSocketClient, x = 1, y = 1) {
         super(name, x, y);
         this.counter_sweet = 0;
-        if (websocket != undefined) {
-            this.ws = websocket;
-        } else {
-            this.ws = undefined;
-        }
+        this.secret = secret;
+        this.ws = ws
 
     }
 

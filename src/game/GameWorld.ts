@@ -58,13 +58,17 @@ export class GameWorld {
     }
 
     /**
-     * @param ws a websocket instance
+     * @param secret a secret of a player
      * @returns The player concerned by the websocket
      */
-    getPlayerFromWS(ws: WebSocketClient): Player | undefined {
-        return (this.objects.find(e => e instanceof Player && e.ws === ws) as Player);
+    getPlayerFromSecret(secret: string): Player | undefined {
+        return (this.objects.find(e => e instanceof Player && e.secret === secret) as Player);
     }
 
+    /**
+     * @param player The player ton move horizontally
+     * @param move The number of unit to move [-dimension_x ; +dimension_x]
+     */
     moveHorizontal(player: Player, move: number) {
         if (player.x + move < this.dimension_x && player.x + move >= 0) {
             const potentielObjet = this.getObjectFromPos(player.x + move, player.y);
@@ -76,7 +80,11 @@ export class GameWorld {
         }
     }
 
-
+    /**
+     * 
+     * @param player The player ton move vertically
+     * @param move The number of unit to move [-dimension_y ; +dimension_y]
+     */
     moveVertical(player: Player, move: number) {
         if (player.y + move < this.dimension_y && player.y + move >= 0) {
             const potentielObjet = this.getObjectFromPos(player.x, player.y + move);
@@ -89,7 +97,7 @@ export class GameWorld {
     }
 
     /**
-     * @returns The number of swweets in the game
+     * @returns The number of sweets in the game
      */
     getSweetCount() : number {
     let counter = 0
@@ -101,6 +109,9 @@ export class GameWorld {
         return counter;
     }
 
+    /**
+     * Reset the game at a start state
+     */
     reset() {
         this.objects = [];
         this.generateSweets(5);
