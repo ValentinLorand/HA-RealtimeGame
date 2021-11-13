@@ -5,6 +5,8 @@
 create_game -> Création d'une nouvelle partie
 join_game -> Rejoindre une partie en cours
 
+get_state -> Demande de récupération de l'état courant de la partie
+
 ask_move_up -> Demande d'un déplacement vers le haut
 ask_move_down -> Demande d'un déplacement vers le bas
 ask_move_right -> Demande d'un déplacement vers la droite

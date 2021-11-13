@@ -4,7 +4,7 @@ import { Application,Router,RouterContext,send } from "https://deno.land/x/oak@v
 import { adapterFactory,engineFactory,viewEngine } from "https://deno.land/x/view_engine@v1.5.0/mod.ts";
 import { WebSocketClient,WebSocketServer } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import { GameWorld } from "./game/GameWorld.ts";
-import { manageSocketMessage,manageStartGameMessage } from "./sockets.ts";
+import { manageOutGameMessage,manageInGameMessage } from "./sockets.ts";
 
 const logServer = log.getLogger();
 logServer.level = 10;
@@ -71,10 +71,10 @@ export function startSocketServer() {
       let result;
       if (actionAndSecret[0] === "join_game" ||actionAndSecret[0] === "create_game") {
         //TODO add check size of the array
-        result = manageStartGameMessage(actionAndSecret[0], actionAndSecret[1],actionAndSecret[2],ws, GameWorldInstance);
+        result = manageOutGameMessage(actionAndSecret[0], actionAndSecret[1],actionAndSecret[2],ws, GameWorldInstance);
       }
       else {
-       result = manageSocketMessage(actionAndSecret[0], actionAndSecret[1], GameWorldInstance);
+       result = manageInGameMessage(actionAndSecret[0], actionAndSecret[1], GameWorldInstance);
       }
       // On envoi le JSON à toutes les joueurs de la partie.
       sendAll(JSON.stringify(result));
