@@ -5,7 +5,7 @@ import { Sweet } from "../src/game/Sweet.ts";
 
 // Simple name and function, compact form, but not configurable
 Deno.test("Create Player", () => {
-  const player = new Player("leo", undefined, 2, 3);
+  const player = new Player("leo", "mysecret",undefined, 2, 3);
   assertEquals(player.name, "leo");
   assertEquals(player.x, 2);
   assertEquals(player.y, 3);
@@ -28,8 +28,8 @@ Deno.test("Create Gameworld", () => {
 
 Deno.test("Manage Gameworld", () => {
   const game = new GameWorld(25, 25);
-  const player = new Player("Valentin");
-  const player2 = new Player("Léo");
+  const player = new Player("Valentin","monsecret");
+  const player2 = new Player("Léo","sonsecret");
   game.addPlayer(player);
   assertEquals(game.getSweetCount(), 5);
   assertEquals(game.getPlayers(), [player]);
@@ -40,7 +40,7 @@ Deno.test("Manage Gameworld", () => {
 
 Deno.test("Move Player", () => {
   const game = new GameWorld(15, 15);
-  const player = new Player("Valentin", undefined, 0, 0);
+  const player = new Player("Valentin", "monsecret", undefined, 0, 0);
   game.addPlayer(player);
   for (let i = 0; i < 18; i++) game.moveHorizontal(player, 1);
   assertEquals(game.getPlayers().length, 1);
@@ -54,7 +54,7 @@ Deno.test("Move Player", () => {
 
 Deno.test("Move Player2", () => {
     const game = new GameWorld(15, 15);
-    const player = new Player("Valentin", undefined, 0, 0);
+    const player = new Player("Valentin", "monsecret", undefined, 0, 0);
     game.addPlayer(player);
     game.moveHorizontal(player, -1);
     assertEquals(player.x, 0);
