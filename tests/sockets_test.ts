@@ -1,7 +1,8 @@
 import { assertEquals,assertExists } from "https://deno.land/std@0.114.0/testing/asserts.ts";
 import {delay} from "https://deno.land/std@0.114.0/async/mod.ts";
 import { GameWorldInstance } from "../src/server.ts";
-import * as log from "https://deno.land/std@0.111.0/log/mod.ts"
+import * as log from "https://deno.land/std@0.111.0/log/mod.ts";
+import { promisify } from "https://deno.land/x/promisify/mod.ts";
 
 const loggerServer = log.getLogger()
 loggerServer.level = 30
@@ -27,6 +28,18 @@ Deno.test("Join Game", async () => {
   assertEquals(testNbPlayerBefore,0);
   assertEquals(testNbPlayerBetween,1);
   assertEquals(testNbPlayerAfter,2);
+});
+
+Deno.test("Join Game with unknown secret", async () => {
+  GameWorldInstance.reset();
+
+  // Join with an unknown secret
+  const socket = new WebSocket('ws://127.0.0.1:8080');
+  socket.onopen = () => socket.send('get_state unknown_secret_toto')
+  // Expect correct error message
+  socket.onmessage = m => assertEquals(m.data, "error unknown_secret")
+  await delay(200);
+  socket.close();
 });
 
 Deno.test("Move up", async () => {
@@ -59,6 +72,7 @@ Deno.test("Move up", async () => {
   assertEquals(testNbPlayerAfter,1);
   assertEquals(x1,x2);
   assertEquals(y1-1,y2);
+  await delay(200);
 });
 
 Deno.test("Move down", async () => {
@@ -90,6 +104,7 @@ Deno.test("Move down", async () => {
   assertEquals(testNbPlayerAfter,1);
   assertEquals(x1,x2);
   assertEquals(y1+1,y2);
+  await delay(200);
 });
 
 Deno.test("Move left", async () => {
@@ -121,6 +136,7 @@ Deno.test("Move left", async () => {
   assertEquals(testNbPlayerAfter,1);
   assertEquals(x1-1,x2);
   assertEquals(y1,y2);
+  await delay(200);
 });
 
 Deno.test("Move right", async () => {

@@ -33,6 +33,11 @@ function joinGame($event) {
   
   socket.onmessage = function(event) {
     console.log(`[message] Data received from server: ${event.data}`);
+    if (event.data.startsWith("error")) {
+      const errCode = event.data.split(" ")[1]
+      console.warn(`[error] server returned error code ${errCode}`)
+      return
+    }
     render(JSON.parse(event.data))
   };
   

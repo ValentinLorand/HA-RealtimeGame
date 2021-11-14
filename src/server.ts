@@ -77,7 +77,8 @@ export function startSocketServer() {
        result = manageInGameMessage(actionAndSecret[0], actionAndSecret[1], GameWorldInstance);
       }
       // On envoi le JSON à toutes les joueurs de la partie.
-      sendAll(JSON.stringify(result));
+      console.log("sending", result)
+      sendAll(result);
     });
   });
 
