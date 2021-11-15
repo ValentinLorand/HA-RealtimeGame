@@ -21,8 +21,8 @@ export class GameWorld {
      */
     private generateSweets(N: number) {
         for (let i = 0; i < N; i++) {
-            const randomX = Math.floor(Math.random() * this.dimension_x) + 1;
-            const randomY = Math.floor(Math.random() * this.dimension_y) + 1;
+            const randomX = Math.floor(Math.random() * this.dimension_x);
+            const randomY = Math.floor(Math.random() * this.dimension_y);
 
             if (this.getObjectFromPos(randomX, randomY) === undefined) {
                 this.objects.push(new Sweet("sweet" + i, randomX, randomY));
