@@ -35,3 +35,8 @@ function makeid(length) {
   }
   return result;
 }
+
+function clearCookies() {
+  setCookie("secret", "", -1)
+  setCookie("nickname", "", -1)
+}

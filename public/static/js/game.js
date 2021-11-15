@@ -1,10 +1,13 @@
 const svgns = "http://www.w3.org/2000/svg"
 const container = document.getElementById( 'cont' );
+const scoreboard = document.getElementById( 'scoreboard' )
+
 
 function render(state) {
 
     // Cleaning board
     container.innerHTML = ''
+    scoreboard.innerHTML = ''
     
     const BOARD_CELL_SIZE = 5
     const CELL_X_SPACING = (container.clientWidth - 10) / state.game.dimension_x
@@ -29,6 +32,7 @@ function render(state) {
     state.objects.forEach(o => {
         switch (o.kind) {
             case "player":
+                // Rect
                 let rect = document.createElementNS(svgns, 'rect')
                 rect.setAttributeNS(null, 'x', (o.x + 0.5) * CELL_X_SPACING - PLAYER_SIZE/2 + BOARD_CELL_SIZE/2);
                 rect.setAttributeNS(null, 'y', (o.y + 0.5) * CELL_Y_SPACING - PLAYER_SIZE/2 + BOARD_CELL_SIZE/2);
@@ -36,6 +40,22 @@ function render(state) {
                 rect.setAttributeNS(null, 'height', PLAYER_SIZE)
                 rect.setAttributeNS(null, 'style', 'fill:rgb(0,0,200)')
                 container.appendChild(rect);
+                // Name
+                let text = document.createElementNS(svgns, 'text')
+                text.setAttributeNS(null, 'x', (o.x + 0.5) * CELL_X_SPACING);
+                text.setAttributeNS(null, 'y', (o.y + 0.5) * CELL_Y_SPACING - PLAYER_SIZE/2);
+                text.setAttributeNS(null, 'text-anchor', 'middle');
+                text.innerHTML = o.name
+                container.appendChild(text);
+                // Scoreboard
+                let ul = document.createElement('tr')
+                let liName = document.createElement('td')
+                let liScore = document.createElement('td')
+                liName.innerText = o.name
+                liScore.innerText = o.counter_sweet
+                ul.appendChild(liName)
+                ul.appendChild(liScore)
+                scoreboard.appendChild(ul)
                 break;
             case "sweet":
                 let circle = document.createElementNS(svgns, 'circle')
@@ -49,5 +69,5 @@ function render(state) {
                 break;
         }
     })
-
+    
 }

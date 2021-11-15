@@ -10,6 +10,12 @@
       html {
         font-family: sans-serif;
       }
+      svg {
+        display: inline-block;
+      }
+      table {
+        display: inline-block;
+      }
     </style>
   </head>
   <body>
@@ -25,12 +31,15 @@
     <div id="joinForm">
       <input id="nickname" type="text" placeholder="Nickname">
       <button onclick="joinGame()">Join game</button>
+      <button onclick="clearCookies()">Clear cookies</button>
     </div>
-    <svg id="cont" height="1000" width="1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
+    <svg id="cont" height="600" width="600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
+    <table id="scoreboard"></table>
   </body>
   <footer>
     <script src="/static/js/cookieHelper.js"></script>
     <script src="/static/js/game.js"></script>
+    <script src="/static/js/eventListeners.js"></script>
     <script src="/static/js/client.js"></script>
   </footer>
 </html>

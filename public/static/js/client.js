@@ -29,6 +29,8 @@ function joinGame($event) {
       console.log(`[open] Session created. Game joined using nickname : ${nickname} secret : ${secret}`);
     }
 
+    setupKeydownHandler(socket, secret)
+
   };
   
   socket.onmessage = function(event) {
