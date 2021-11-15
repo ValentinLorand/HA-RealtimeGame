@@ -50,6 +50,7 @@ Deno.test("Move Player", () => {
   assertEquals(game.getPlayers().length, 1);
   assertEquals(player.x, 14);
   assertEquals(player.y, 14);
+  assertEquals(game.getSweetCount(), 5);
 });
 
 Deno.test("Move Player2", () => {
@@ -63,4 +64,5 @@ Deno.test("Move Player2", () => {
     assertEquals(player.x, 0);
     assertEquals(player.y, 0);
     assertEquals(game.getPlayers().length, 1);
+    assertEquals(game.getSweetCount(), 5);
   });

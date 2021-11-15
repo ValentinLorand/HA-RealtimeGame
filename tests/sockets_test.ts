@@ -4,7 +4,7 @@ import { GameWorldInstance } from "../src/server.ts";
 import * as log from "https://deno.land/std@0.111.0/log/mod.ts";
 
 const loggerServer = log.getLogger()
-loggerServer.level = 30
+loggerServer.level = 40
 
 Deno.test("Join Game", async () => {
   GameWorldInstance.reset();
