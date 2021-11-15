@@ -75,6 +75,7 @@ export class GameWorld {
             if (potentielObjet instanceof Sweet) {
                 this.objects = this.objects.filter(o => o !== potentielObjet);
                 player.eatSweet();
+                this.generateSweets(1);
             //If there is a player, no move
             }else if (potentielObjet instanceof Player) {
                 return
