@@ -75,6 +75,9 @@ export class GameWorld {
             if (potentielObjet instanceof Sweet) {
                 this.objects = this.objects.filter(o => o !== potentielObjet);
                 player.eatSweet();
+            //If there is a player, no move
+            }else if (potentielObjet instanceof Player) {
+                return
             }
             player.moveHorizontal(move);
         }
@@ -91,6 +94,9 @@ export class GameWorld {
             if (potentielObjet instanceof Sweet) {
                 this.objects = this.objects.filter(o => o !== potentielObjet);
                 player.eatSweet();
+            //If there is a player, no move
+            }else if (potentielObjet instanceof Player) {
+                return
             }
             player.moveVertical(move);
         }
