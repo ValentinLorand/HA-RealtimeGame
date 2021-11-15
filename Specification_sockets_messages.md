@@ -13,6 +13,7 @@
 
 - `error <errorcode>` -> Une erreur est survenue<br>
     errorcodes :
+    - `unknown_message`
     - `unknown_secret`
 - `<gamestate as json>`
 

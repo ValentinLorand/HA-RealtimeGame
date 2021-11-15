@@ -66,18 +66,24 @@ export function startSocketServer() {
     logServer.info("New visitor connected.");
     // Nouveau message
     ws.on("message", function (message: string) {
+      let response = null;
 
       // Identification de l'emetteur du message
       const player = manageIdentification(message,ws,GameWorldInstance)
 
       if (player) {
         // Gestion du message et de ses effets puis génération d'un JSON.
-        const response = manageSocketMessage(player,message, GameWorldInstance);
-        // On envoi le JSON à toutes les joueurs de la partie.
-        sendAll(response);
-      }else {
-        logServer.warning("Identification failed.")
+        response = manageSocketMessage(player,message, GameWorldInstance);
+
+        // Catch error secret
+        if (!response) { response = "error unknown_message"; }
+      } else {
+        logServer.warning("Identification failed.");
+        // Catch error secret
+        response = "error unknown_secret";
       }
+      // On envoi le JSON à toutes les joueurs de la partie.
+      sendAll(response);
     });
   });
 

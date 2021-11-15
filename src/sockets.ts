@@ -3,7 +3,7 @@ import { Player } from "./game/Player.ts";
 import { WebSocketClient } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import * as log from "https://deno.land/std@0.111.0/log/mod.ts";
 
-export function manageSocketMessage(player:Player, message: String, gameworld: GameWorld): string {
+export function manageSocketMessage(player:Player, message: String, gameworld: GameWorld): string|null {
   const raw = message.split(" ")
   
   if (raw[1] === "get_state" || raw[1] === "join_game" || raw[1] === "create_game") {
@@ -22,12 +22,13 @@ export function manageSocketMessage(player:Player, message: String, gameworld: G
     gameworld.moveHorizontal(player, -1);
   } else {
     log.warning("Unknown message received by "+ player.name +" : " + raw[1]);
+    return null;
   }
 
   return JSON.stringify(gameworld.toJSON());
 }
 
-export function manageIdentification(message: String, ws: WebSocketClient, gameworld: GameWorld): Player|undefined {
+export function manageIdentification(message: String, ws: WebSocketClient, gameworld: GameWorld): Player|null {
   const raw = message.split(" ");
   let player = gameworld.getPlayerFromSecret(raw[0]);
 
@@ -43,7 +44,7 @@ export function manageIdentification(message: String, ws: WebSocketClient, gamew
       gameworld.addPlayer(player);
     } else {
       log.warning("Unknown player, secret=" + raw[0]);
-      return undefined;
+      return null;
     }
   } else {
     // Update player WebSockerClient
