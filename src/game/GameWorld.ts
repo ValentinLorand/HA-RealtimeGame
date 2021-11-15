@@ -1,4 +1,3 @@
-import { WebSocketClient } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import { Sweet } from "./Sweet.ts";
 import { SimpleObject } from "./SimpleObject.ts";
 import { Player } from "./Player.ts";
@@ -95,6 +94,7 @@ export class GameWorld {
             if (potentielObjet instanceof Sweet) {
                 this.objects = this.objects.filter(o => o !== potentielObjet);
                 player.eatSweet();
+                this.generateSweets(1);
             //If there is a player, no move
             }else if (potentielObjet instanceof Player) {
                 return
