@@ -2,12 +2,12 @@
 
 ## Client -> serveur (test)
 
-- `join_game <nickname> <secret>`  -> Rejoindre une partie en cours
-- `get_state <secret>` -> Demande de récupération de l'état courant de la partie
-- `ask_move_up <secret>` -> Demande d'un déplacement vers le haut
-- `ask_move_down <secret>` -> Demande d'un déplacement vers le bas
-- `ask_move_right <secret>` -> Demande d'un déplacement vers la droite
-- `ask_move_left <secret>` -> Demande d'un déplacement vers la gauche
+- `<secret> join_game <username>`  -> Rejoindre une partie en cours
+- `<secret> get_state` -> Demande de récupération de l'état courant de la partie
+- `<secret> ask_move_up` -> Demande d'un déplacement vers le haut
+- `<secret> ask_move_down` -> Demande d'un déplacement vers le bas
+- `<secret> ask_move_right` -> Demande d'un déplacement vers la droite
+- `<secret> ask_move_left` -> Demande d'un déplacement vers la gauche
 
 ## Serveur -> Client (JSON)
 

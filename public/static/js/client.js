@@ -18,14 +18,14 @@ function joinGame($event) {
 
     if (secret != "" && nickname != "") {
       console.log(`Found cookie, using nickname ${nickname} and secret ${secret}`)
-      socket.send(`get_state ${secret}`)
+      socket.send(`${secret} get_state`)
     } else {
       console.log(`No previous session found, creating one...`)
       nickname = document.getElementById("nickname").value.trim()
       setCookie("nickname", nickname)
       secret = makeid(10)
       setCookie("secret", secret)
-      socket.send(`join_game ${nickname} ${secret}`);
+      socket.send(`${secret} join_game ${nickname}`);
       console.log(`[open] Session created. Game joined using nickname : ${nickname} secret : ${secret}`);
     }
 

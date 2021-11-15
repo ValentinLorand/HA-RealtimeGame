@@ -67,17 +67,17 @@ export function startSocketServer() {
     // Nouveau message
     ws.on("message", function (message: string) {
       // Gestion du message et de ses effets puis génération d'un JSON.
-      const actionAndSecret = message.split(" ")
+      const secretAndAction = message.split(" ")
       let result;
-      if (actionAndSecret[0] === "join_game" ||actionAndSecret[0] === "create_game") {
+      if (secretAndAction[1] === "join_game" || secretAndAction[1] === "create_game" || secretAndAction[1] === "get_state") {
         //TODO add check size of the array
-        result = manageOutGameMessage(actionAndSecret[0], actionAndSecret[1],actionAndSecret[2],ws, GameWorldInstance);
+        result = manageOutGameMessage(secretAndAction[0], secretAndAction[1],secretAndAction[2],ws, GameWorldInstance);
       }
       else {
-       result = manageInGameMessage(actionAndSecret[0], actionAndSecret[1], GameWorldInstance);
+       result = manageInGameMessage(secretAndAction[0], secretAndAction[1], GameWorldInstance);
       }
       // On envoi le JSON à toutes les joueurs de la partie.
-      console.log("sending", result)
+      console.log("sending", result);
       sendAll(result);
     });
   });
