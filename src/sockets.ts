@@ -1,55 +1,54 @@
 import { GameWorld } from "./game/GameWorld.ts";
-import { WebSocketClient } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import { Player } from "./game/Player.ts";
+import { WebSocketClient } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import * as log from "https://deno.land/std@0.111.0/log/mod.ts";
 
-export function manageInGameMessage(secret: string, action: string, gameworld: GameWorld): string {
-  const player = gameworld.getPlayerFromSecret(secret);
+export function manageSocketMessage(player:Player, message: String, gameworld: GameWorld): string {
+  const raw = message.split(" ")
   
-  //If no player found => ERROR
-  if (player === undefined) {
-    log.warning("Unknown player secret : " + secret);
-    return "error unknown_message"
-  }
-
-  if (action == "get_state") {
+  if (raw[1] === "get_state" || raw[1] === "join_game" || raw[1] === "create_game") {
     return JSON.stringify(gameworld.toJSON());
-  } else if (action == "ask_move_up") {
+  } else if (raw[1] === "ask_move_up") {
     // Up move
     gameworld.moveVertical(player, -1);
-  } else if (action == "ask_move_down") {
+  } else if (raw[1] === "ask_move_down") {
     // Down move
     gameworld.moveVertical(player, 1);
-  } else if (action == "ask_move_right") {
+  } else if (raw[1] === "ask_move_right") {
     // Right move
     gameworld.moveHorizontal(player, 1);
-  } else if (action == "ask_move_left") {
+  } else if (raw[1] === "ask_move_left") {
     // Left move
     gameworld.moveHorizontal(player, -1);
   } else {
-    log.warning("Unknown message received by "+ player.name +" : " + action);
+    log.warning("Unknown message received by "+ player.name +" : " + raw[1]);
   }
 
   return JSON.stringify(gameworld.toJSON());
 }
 
-export function manageOutGameMessage(secret: string, action: string, name: string, ws: WebSocketClient, gameworld: GameWorld): string {
+export function manageIdentification(message: String, ws: WebSocketClient, gameworld: GameWorld): Player|undefined {
+  const raw = message.split(" ");
+  let player = gameworld.getPlayerFromSecret(raw[0]);
 
-  if (action == "create_game") {
-    const player = new Player(name, secret, ws);
-    gameworld.reset(); //TODO feature add new gameworld
-  } else if (action == "join_game") {
-    const player = new Player(name, secret, ws);
-    gameworld.addPlayer(player);
-
-  } else if (action == "get_state") {
-    const player = gameworld.getPlayerFromSecret(secret);
-    if (!player) {
-      log.warning("Unknown player secret : " + secret);
-      return "error unknown_player"
+  //If no player found
+  if (player === undefined) {
+    if ("create_game" === raw[1]) {
+      const raw = message.split(" ");
+      player = new Player(raw[2], raw[0], ws);
+      gameworld.reset(); //TODO feature add new gameworld
+      gameworld.addPlayer(player);
+    } else if ("join_game" === raw[1]) {
+      player = new Player(raw[2], raw[0], ws);
+      gameworld.addPlayer(player);
+    } else {
+      log.warning("Unknown player, secret=" + raw[0]);
+      return undefined;
     }
+  } else {
+    // Update player WebSockerClient
     player.ws = ws;
   }
 
-  return JSON.stringify(gameworld.toJSON());
+  return player;
 }

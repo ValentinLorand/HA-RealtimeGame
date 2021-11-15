@@ -4,7 +4,7 @@ import { Application,Router,RouterContext,send } from "https://deno.land/x/oak@v
 import { adapterFactory,engineFactory,viewEngine } from "https://deno.land/x/view_engine@v1.5.0/mod.ts";
 import { WebSocketClient,WebSocketServer } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import { GameWorld } from "./game/GameWorld.ts";
-import { manageOutGameMessage,manageInGameMessage } from "./sockets.ts";
+import { manageSocketMessage, manageIdentification } from "./sockets.ts";
 
 const logServer = log.getLogger();
 logServer.level = 10;
@@ -66,19 +66,18 @@ export function startSocketServer() {
     logServer.info("New visitor connected.");
     // Nouveau message
     ws.on("message", function (message: string) {
-      // Gestion du message et de ses effets puis génération d'un JSON.
-      const secretAndAction = message.split(" ")
-      let result;
-      if (secretAndAction[1] === "join_game" || secretAndAction[1] === "create_game" || secretAndAction[1] === "get_state") {
-        //TODO add check size of the array
-        result = manageOutGameMessage(secretAndAction[0], secretAndAction[1],secretAndAction[2],ws, GameWorldInstance);
+
+      // Identification de l'emetteur du message
+      const player = manageIdentification(message,ws,GameWorldInstance)
+
+      if (player) {
+        // Gestion du message et de ses effets puis génération d'un JSON.
+        const response = manageSocketMessage(player,message, GameWorldInstance);
+        // On envoi le JSON à toutes les joueurs de la partie.
+        sendAll(response);
+      }else {
+        logServer.warning("Identification failed.")
       }
-      else {
-       result = manageInGameMessage(secretAndAction[0], secretAndAction[1], GameWorldInstance);
-      }
-      // On envoi le JSON à toutes les joueurs de la partie.
-      console.log("sending", result);
-      sendAll(result);
     });
   });
 
