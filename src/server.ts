@@ -98,7 +98,7 @@ export function startSocketServer() {
 
 function check_env_var() {
   const variables = config();
-  console.log(variables);
+  logServer.debug(variables);
   if(!('SERVER_URL' in variables)) {
     logServer.error("Env variable not visible : SERVER_URL");
     Deno.exit(1);
