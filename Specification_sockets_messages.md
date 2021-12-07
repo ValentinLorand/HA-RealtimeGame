@@ -24,6 +24,17 @@ Ensuite, il attends des messages de clients
 Lorsqu'il reçoit un message d'un client, il met à jour son état interne.
 
 
+## Exemple de première réponse
+```json
+{
+"socket_servers" : [
+        "127.0.0.1:8080",
+        "127.0.0.1:8081",
+        "127.0.0.1:8082"
+    ]
+}
+```
+
 ## Exemple de format JSON
 State : 
 ```json
@@ -32,6 +43,11 @@ State :
         "dimension_x" : 20,
         "dimension_y" : 20,
     },
+    "socket_servers" : [
+        "127.0.0.1:8080",
+        "127.0.0.1:8081",
+        "127.0.0.1:8082"
+    ],
     "objects" : [
         {
             "kind" : "player",

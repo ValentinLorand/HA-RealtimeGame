@@ -5,7 +5,7 @@ import { adapterFactory,engineFactory,viewEngine } from "https://deno.land/x/vie
 import { WebSocketClient,WebSocketServer } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import { GameWorld } from "./game/GameWorld.ts";
 import { manageSocketMessage, manageIdentification } from "./sockets.ts";
-import { config } from "https://deno.land/x/dotenv/mod.ts";
+import { config } from "https://deno.land/x/dotenv@v3.1.0/mod.ts";
 
 
 const logServer = log.getLogger();
@@ -65,7 +65,11 @@ export function startSocketServer() {
 
   // New connection
   wss.on("connection", function (ws: WebSocketClient) {
-    logServer.info("New visitor connected.");
+    logServer.info("New visitor connected, send list of the sockets servers");
+
+    //Envoi du premier message avec la liste des serveurs
+    const message = {"socket_servers" : ["127.0.0.1:8080","127.0.0.1:8081","127.0.0.1:8082"]}
+    ws.send(JSON.stringify(message));
     // Nouveau message
     ws.on("message", function (message: string) {
       let response = null;
@@ -92,9 +96,35 @@ export function startSocketServer() {
   logServer.info("✔ Socket server ready on port "+SOCKET_PORT);
 }
 
+function check_env_var() {
+  const variables = config();
+  console.log(variables);
+  if(!('SERVER_URL' in variables)) {
+    logServer.error("Env variable not visible : SERVER_URL");
+    Deno.exit(1);
+  }
+  else if(!('SOCKET_URL' in variables)) {
+    logServer.error("Env variable not visible : SOCKET_URL");
+    Deno.exit(1);
+  }
+  else if(!('SOCKETS_PRIORITY' in variables)) {
+    logServer.error("Env variable not visible : SOCKETS_PRIORITY");
+    Deno.exit(1);
+  }
+  else if(!('OTHER_CLUSTER_NODES' in variables)) {
+    logServer.error("Env variable not visible : OTHER_CLUSTER_NODES");
+    Deno.exit(1);
+  }
+}
+
+//Check configurations
+check_env_var();
+
 // Init a game
 export const GameWorldInstance = new GameWorld();
+
 // Start socket server
 startSocketServer();
+
 // Start web application
 startWebServer();
