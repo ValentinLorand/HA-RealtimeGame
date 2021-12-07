@@ -1,0 +1,41 @@
+version: "3.7"
+
+services:
+    deno1:
+      image: "deno-server:1.0.0"
+      build: .
+      ports:
+        - "8000:8000"
+        - "8080:8080"
+      networks: 
+        - deno
+      environment:
+        - SERVER_URL=127.0.0.1:8000
+        - SOCKETS_URL=127.0.0.1:8080
+
+    deno2:
+      image: "deno-server:1.0.0"
+      build: .
+      ports:
+        - "8001:8000"
+        - "8081:8080"
+      networks: 
+        - deno
+      environment:
+        - SERVER_URL=127.0.0.1:8001
+        - SOCKETS_URL=127.0.0.1:8081
+
+    deno3:
+      image: "deno-server:1.0.0"
+      build: .
+      ports:
+        - "8002:8000"
+        - "8082:8080"
+      networks: 
+        - deno
+      environment:
+        - SERVER_URL=127.0.0.1:8002
+        - SOCKETS_URL=127.0.0.1:8082
+
+networks:
+  deno: {}

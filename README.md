@@ -9,10 +9,24 @@ A basic game made with constraints for distributed systems's course at ESIR :
 
 **Requirements :** Deno(1.15.1)
 
-## Start the application in dev mode
+## Launch the application in dev mode
 ```
 cd HA-RealtimeGame
-deno run --allow-net --allow-read --watch src/server.ts
+echo -e "SERVER_URL=127.0.0.1:8000\nSOCKET_URL=127.0.0.1:8080" > .env
+deno run --allow-net --allow-read --allow-env --watch src/server.ts
+```
+
+## Start a server instance
+```
+cd HA-RealtimeGame
+docker build -t realtimegame:latest .
+docker run -it -p 8000:8000 -p 8080:8080 --name=realtimegame realtimegame:latest
+```
+
+## Start three servers instances
+```
+cd HA-RealtimeGame
+docker-compose up --build
 ```
 
 ## Run tests

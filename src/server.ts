@@ -5,6 +5,8 @@ import { adapterFactory,engineFactory,viewEngine } from "https://deno.land/x/vie
 import { WebSocketClient,WebSocketServer } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import { GameWorld } from "./game/GameWorld.ts";
 import { manageSocketMessage, manageIdentification } from "./sockets.ts";
+import { config } from "https://deno.land/x/dotenv/mod.ts";
+
 
 const logServer = log.getLogger();
 logServer.level = 10;
@@ -41,8 +43,8 @@ export async function startWebServer() {
       root: `${Deno.cwd()}/public`,
     });
   });
-
-  logServer.info("✔ Web server listening on port 8000 (http://127.0.0.1:8000)");
+  const SERVER_URL = config().SERVER_URL;
+  logServer.info("✔ Web server listening on port SERVER_URL (http://"+SERVER_URL+")");
   await app.listen({ port: 8000 });
 }
 
@@ -86,8 +88,8 @@ export function startSocketServer() {
       sendAll(response);
     });
   });
-
-  logServer.info("✔ Socket server ready on port 8080");
+  const SOCKET_PORT = Number(config().SOCKET_URL.split(":")[1]);
+  logServer.info("✔ Socket server ready on port "+SOCKET_PORT);
 }
 
 // Init a game
