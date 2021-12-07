@@ -20,6 +20,7 @@
   </head>
   <body>
     <h1>Welcome to Eat My Sweet</h1>
+    <h3> Serveur socket cible : <%= socketServer %></h3>
     <p>
       A basic game made with constraints for distributed systems's course at ESIR :
       <ul>
@@ -37,6 +38,7 @@
     <table id="scoreboard"></table>
   </body>
   <footer>
+    <script>var websocketURI='<%= socketServer %>';</script>
     <script src="/static/js/cookieHelper.js"></script>
     <script src="/static/js/game.js"></script>
     <script src="/static/js/eventListeners.js"></script>

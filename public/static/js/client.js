@@ -1,17 +1,21 @@
-let websocketURI
-if (window.location.hostname.includes("8000")) {
-  // If app is ran in GitPod, websocket is at url 8080-<url>
-  websocketURI = `wss://${window.location.hostname.replace("8000", "8080")}`
-} else {
-  // If ran as a regular server, websocket is on same hostname, unsecure, port 8080
-  websocketURI = `ws://${window.location.hostname}:8080`
+// let websocketURI; DEFINE BEFORE IN HTML
+let websocketURI2;
+let websocketURI3;
+
+function updateSocketsURIs(URIs) {
+  if(websocketURI !== `${URIs[0]}`) {
+    websocketURI=`${URIs[0]}`;
+    console.log(`WebSocket server updated ! We need to create a new WebSocket tunnel`);
+  }
+  websocketURI2=`${URIs[1]}`;
+  websocketURI3=`${URIs[2]}`;
 }
 
 function joinGame($event) {
 
   let nickname = getCookie("nickname")
   let secret = getCookie("secret")
-
+  // console.log(websocketURI);
   const socket = new WebSocket(websocketURI);
 
   socket.onopen = function(e) {
@@ -35,12 +39,20 @@ function joinGame($event) {
   
   socket.onmessage = function(event) {
     console.log(`[message] Data received from server: ${event.data}`);
+
+    //If error received
     if (event.data.startsWith("error")) {
       const errCode = event.data.split(" ")[1]
       console.warn(`[error] server returned error code ${errCode}`)
       return
     }
-    render(JSON.parse(event.data))
+    //Else do the job
+    const data = JSON.parse(event.data)
+
+    updateSocketsURIs(data["socket_servers"]);
+    if("game" in data) {
+      render(data);
+    }
   };
   
   socket.onclose = function(event) {
@@ -53,8 +65,11 @@ function joinGame($event) {
     }
   };
 
-  socket.onerror = console.error
-
+  socket.onerror = function(event) {
+    console.warn(`Error occured with current websocket, trying to connect to the next WebSocket URI`);
+    websocketURI = websocketURI2;
+    joinGame();
+  }
 }
 
 if (getCookie("nickname") && getCookie("secret")) joinGame()

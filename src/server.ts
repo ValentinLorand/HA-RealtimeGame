@@ -27,7 +27,7 @@ export async function startWebServer() {
     ctx.response.body = await renderFile(
       `${Deno.cwd()}/public/views/index.ejs`,
       {
-        data: { nom: "Léo" },
+        socketServer: config().SOCKET_URL,
       },
     );
   }
@@ -68,9 +68,10 @@ export function startSocketServer() {
     logServer.info("New visitor connected, send list of the sockets servers");
 
     //Envoi du premier message avec la liste des serveurs
-    const message = {"socket_servers" : ["127.0.0.1:8080","127.0.0.1:8081","127.0.0.1:8082"]}
-    ws.send(JSON.stringify(message));
-    // Nouveau message
+    // const message = {"socket_servers" : ["localhost:8080","127.0.0.1:8081","127.0.0.1:8082"]}
+    // ws.send(JSON.stringify(message));
+
+    // A chaque message que l'on reçoit d'un client
     ws.on("message", function (message: string) {
       let response = null;
 
@@ -83,15 +84,20 @@ export function startSocketServer() {
 
         // Catch error secret
         if (!response) { response = "error unknown_message"; }
+        else response["socket_servers"] = config().SOCKETS_PRIORITY.split(","); //TODO reordonnancement des sockets servers
+
       } else {
         logServer.warning("Identification failed.");
         // Catch error secret
         response = "error unknown_secret";
       }
+      //TODO send state of the game to the others servers
+
       // On envoi le JSON à toutes les joueurs de la partie.
-      sendAll(response);
+      sendAll(JSON.stringify(response));
     });
   });
+
   const SOCKET_PORT = Number(config().SOCKET_URL.split(":")[1]);
   logServer.info("✔ Socket server ready on port "+SOCKET_PORT);
 }

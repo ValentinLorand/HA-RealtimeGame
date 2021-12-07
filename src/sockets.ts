@@ -3,11 +3,11 @@ import { Player } from "./game/Player.ts";
 import { WebSocketClient } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import * as log from "https://deno.land/std@0.111.0/log/mod.ts";
 
-export function manageSocketMessage(player: Player, message: String, gameworld: GameWorld): string | null {
+export function manageSocketMessage(player: Player, message: String, gameworld: GameWorld): Record<string,unknown> | null {
   const raw = message.split(" ");
 
   if (raw[1] === "get_state" || raw[1] === "join_game" || raw[1] === "create_game") {
-    return JSON.stringify(gameworld.toJSON());
+    //DO NOTHING
   } else if (raw[1] === "ask_move_up") {
     // Up move
     gameworld.moveVertical(player, -1);
@@ -25,7 +25,7 @@ export function manageSocketMessage(player: Player, message: String, gameworld: 
     return null;
   }
 
-  return JSON.stringify(gameworld.toJSON());
+  return gameworld.toJSON();
 }
 
 export function manageIdentification(message: String, ws: WebSocketClient, gameworld: GameWorld): Player | undefined {
