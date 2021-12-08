@@ -5,8 +5,7 @@ import { adapterFactory,engineFactory,viewEngine } from "https://deno.land/x/vie
 import { WebSocketClient,WebSocketServer } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import { GameWorld } from "./game/GameWorld.ts";
 import { manageSocketMessage, manageIdentification } from "./sockets.ts";
-import { config } from "https://deno.land/x/dotenv@v3.1.0/mod.ts";
-
+import { persistGameState, jsonToGameworld } from "./http.ts";
 
 const logServer = log.getLogger();
 logServer.level = 10;
@@ -14,6 +13,9 @@ logServer.level = 10;
  * START THE WEB SERVER
  */
 export async function startWebServer() {
+  const SERVER_URL = Deno.env.get("SERVER_URL")!;
+  const SERVER_PORT = Number(SERVER_URL.split(":")[2])
+
   // Setup engine
   const ejsEngine = engineFactory.getEjsEngine();
   const oakAdapter = adapterFactory.getOakAdapter();
@@ -27,14 +29,22 @@ export async function startWebServer() {
     ctx.response.body = await renderFile(
       `${Deno.cwd()}/public/views/index.ejs`,
       {
-        socketServer: config().SOCKET_URL,
+        socketServer: Deno.env.get("SOCKET_URL"),
       },
     );
+  }
+
+  async function handlePost(ctx: RouterContext) {
+    const json = await ctx.request.body().value;
+    GameWorldInstance = jsonToGameworld(json);
+    ctx.response.body = {'code' : 0, 'message':'Done'};
+    ctx.response.status = 200
   }
 
   // Routes
   const router = new Router();
   router.get("/", handleIndex);
+  router.post("/", handlePost);
 
   app.use(router.routes());
   app.use(router.allowedMethods());
@@ -43,16 +53,17 @@ export async function startWebServer() {
       root: `${Deno.cwd()}/public`,
     });
   });
-  const SERVER_URL = config().SERVER_URL;
-  logServer.info("✔ Web server listening on port SERVER_URL (http://"+SERVER_URL+")");
-  await app.listen({ port: 8000 });
+  
+  logServer.info(`✔ Web server listening on port ${SERVER_PORT} (${SERVER_URL})`);
+  await app.listen({ port: SERVER_PORT });
 }
 
 /**
  * START SOCKET SERVER
  */
 export function startSocketServer() {
-  const wss = new WebSocketServer(8080);
+  const SOCKET_PORT = Number(Deno.env.get("SOCKET_URL")!.split(":")[2]);
+  const wss = new WebSocketServer(SOCKET_PORT);
 
   // Send a message to all players
   function sendAll(message: string) {
@@ -84,40 +95,38 @@ export function startSocketServer() {
 
         // Catch error secret
         if (!response) { response = "error unknown_message"; }
-        else response["socket_servers"] = config().SOCKETS_PRIORITY.split(","); //TODO reordonnancement des sockets servers
-
+        else {
+            response["socket_servers"] = Deno.env.get("SOCKETS_PRIORITY")!.split(","); //TODO reordonnancement des sockets servers
+            persistGameState(response);
+        }
       } else {
         logServer.warning("Identification failed.");
         // Catch error secret
         response = "error unknown_secret";
       }
-      //TODO send state of the game to the others servers
-
+      
       // On envoi le JSON à toutes les joueurs de la partie.
       sendAll(JSON.stringify(response));
     });
   });
-
-  const SOCKET_PORT = Number(config().SOCKET_URL.split(":")[1]);
   logServer.info("✔ Socket server ready on port "+SOCKET_PORT);
 }
 
 function check_env_var() {
-  const variables = config();
-  logServer.debug(variables);
-  if(!('SERVER_URL' in variables)) {
+  logServer.debug(Deno.env.toObject());
+  if(Deno.env.get("SERVER_URL") === undefined) {
     logServer.error("Env variable not visible : SERVER_URL");
     Deno.exit(1);
   }
-  else if(!('SOCKET_URL' in variables)) {
+  else if(Deno.env.get("SOCKET_URL") === undefined) {
     logServer.error("Env variable not visible : SOCKET_URL");
     Deno.exit(1);
   }
-  else if(!('SOCKETS_PRIORITY' in variables)) {
+  else if(Deno.env.get("SOCKETS_PRIORITY") === undefined) {
     logServer.error("Env variable not visible : SOCKETS_PRIORITY");
     Deno.exit(1);
   }
-  else if(!('OTHER_CLUSTER_NODES' in variables)) {
+  else if(Deno.env.get("OTHER_CLUSTER_NODES") === undefined) {
     logServer.error("Env variable not visible : OTHER_CLUSTER_NODES");
     Deno.exit(1);
   }
@@ -127,7 +136,7 @@ function check_env_var() {
 check_env_var();
 
 // Init a game
-export const GameWorldInstance = new GameWorld();
+export let GameWorldInstance = new GameWorld();
 
 // Start socket server
 startSocketServer();
