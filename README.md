@@ -12,7 +12,7 @@ A basic game made with constraints for distributed systems's course at ESIR :
 ## Launch the application in dev mode
 ```
 cd HA-RealtimeGame
-echo -e "SERVER_URL=127.0.0.1:8000\nSOCKET_URL=127.0.0.1:8080" > .env
+export $(cat .env | sed 's/#.*//g' | xargs)
 deno run --allow-net --allow-read --allow-env --watch src/server.ts
 ```
 
