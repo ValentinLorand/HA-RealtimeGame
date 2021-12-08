@@ -7,9 +7,9 @@ export class Player extends SimpleObject {
     secret: string;
     counter_sweet: number;
 
-    constructor(name: string, secret: string,ws?:WebSocketClient, x=1, y=1) {
+    constructor(name: string, secret: string,ws?:WebSocketClient, x=1, y=1,counter_sweets=0) {
         super(name, x, y);
-        this.counter_sweet = 0;
+        this.counter_sweet = counter_sweets;
         this.secret = secret;
         this.ws = ws
 

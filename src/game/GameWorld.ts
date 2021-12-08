@@ -34,9 +34,15 @@ export class GameWorld {
     /**
      * @param player The player to add to the game
      */
-    addPlayer(player: Player): Player {
+    addPlayer(player: Player): void {
         this.objects.push(player);
-        return player;
+    }
+
+    /**
+     * @param sweet The sweet to add to the game
+     */
+    addSweet(player: Sweet): void {
+        this.objects.push(player);
     }
 
     /**
