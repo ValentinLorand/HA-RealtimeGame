@@ -3,7 +3,7 @@ import { Player } from "./game/Player.ts";
 import { WebSocketClient } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import * as log from "https://deno.land/std@0.111.0/log/mod.ts";
 
-export function manageSocketMessage(player: Player, message: String, gameworld: GameWorld): Record<string,unknown> | null {
+export function manageSocketMessage(player: Player, message: String, gameworld: GameWorld): Record<string,any> | null {
   const raw = message.split(" ");
 
   if (raw[1] === "get_state" || raw[1] === "join_game" || raw[1] === "create_game") {

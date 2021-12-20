@@ -4,6 +4,7 @@ import { Application,Router,RouterContext,send } from "https://deno.land/x/oak@v
 import { adapterFactory,engineFactory,viewEngine } from "https://deno.land/x/view_engine@v1.5.0/mod.ts";
 import { WebSocketClient,WebSocketServer } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import { GameWorld } from "./game/GameWorld.ts";
+import { Player } from "./game/Player.ts";
 import { manageSocketMessage, manageIdentification } from "./sockets.ts";
 import { persistGameState, jsonToGameworld } from "./http.ts";
 
@@ -97,6 +98,12 @@ export function startSocketServer() {
         if (!response) { response = "error unknown_message"; }
         else {
             response["socket_servers"] = Deno.env.get("SOCKETS_PRIORITY")!.split(","); //TODO reordonnancement des sockets servers
+            // Retrieve secrets
+            response["objects"].forEach((object:Record<string,any>) =>  {
+              if(object["kind"] == "player") {
+                object['secret'] = (GameWorldInstance.getObjectFromPos(object['x'],object['y']) as Player).secret;
+              }
+            });
             persistGameState(response);
         }
       } else {
