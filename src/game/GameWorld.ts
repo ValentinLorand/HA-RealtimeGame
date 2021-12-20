@@ -7,11 +7,11 @@ export class GameWorld {
     dimension_x: number;
     dimension_y: number;
 
-    constructor(dimensionX = 20, dimensionY = 20) {
+    constructor(dimensionX = 20, dimensionY = 20,number_sweets=5) {
         this.objects = [];
         this.dimension_x = dimensionX;
         this.dimension_y = dimensionY;
-        this.generateSweets(5);
+        this.generateSweets(number_sweets);
     }
 
     /**

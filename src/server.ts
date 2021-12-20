@@ -97,13 +97,23 @@ export function startSocketServer() {
         // Catch error secret
         if (!response) { response = "error unknown_message"; }
         else {
-            response["socket_servers"] = Deno.env.get("SOCKETS_PRIORITY")!.split(","); //TODO reordonnancement des sockets servers
+            // Reorder socket servers
+            var socketServers = Deno.env.get("SOCKETS_PRIORITY")!.split(",");
+            for (let i = 1; i < socketServers.length; i++) {
+              if(socketServers[i] == Deno.env.get("SOCKET_URL")) {
+                var tmp = socketServers[0];
+                socketServers[0] = socketServers[i];
+                socketServers[i] = tmp;
+              }
+            }
+            response["socket_servers"] = socketServers;
             // Retrieve secrets
             response["objects"].forEach((object:Record<string,any>) =>  {
               if(object["kind"] == "player") {
                 object['secret'] = (GameWorldInstance.getObjectFromPos(object['x'],object['y']) as Player).secret;
               }
             });
+            logServer.debug(socketServers);
             persistGameState(response);
         }
       } else {

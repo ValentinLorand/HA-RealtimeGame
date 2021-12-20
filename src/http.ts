@@ -42,12 +42,11 @@ export function persistGameState(json:Record<string, unknown>){
  export function jsonToGameworld(json:Record<string, any>) :GameWorld {
   const game:Record<string,number> = json["game"];
   const objects = json["objects"];
-  const result = new GameWorld(game["dimension_x"], game["dimension_y"]);
+  const result = new GameWorld(game["dimension_x"], game["dimension_y"],0);
 
   objects.forEach((object:Record<string, any>) =>  {
     if (object["kind"] === "player") {
       const player = new Player(object["name"],object["secret"],undefined,object["x"],object["y"],object["counter_sweet"]); //TODO add secret and ws instance?
-      console.log(object["secret"]);
       result.addPlayer(player);
     } else if (object["kind"] === "sweet") {
       const sweet = new Sweet(object["name"],object["x"],object["y"]);

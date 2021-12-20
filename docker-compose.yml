@@ -41,7 +41,7 @@ services:
         - SERVER_URL=http://localhost:8002
         - SOCKET_URL=ws://localhost:8082
         - SOCKETS_PRIORITY=ws://localhost:8080,ws://localhost:8081,ws://localhost:8082
-        - OTHER_CLUSTER_NODES=http://deno1:8000,http://deno2:8002
+        - OTHER_CLUSTER_NODES=http://deno1:8000,http://deno2:8001
 
 networks:
   deno: {}
