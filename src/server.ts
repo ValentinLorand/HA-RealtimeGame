@@ -42,10 +42,19 @@ export async function startWebServer() {
     ctx.response.status = 200
   }
 
+
+  async function handleGetServers(ctx: RouterContext) {
+    // Gestion de la demande spécifique de la liste des sockets server
+    var socketServers = Deno.env.get("SOCKETS_PRIORITY")!.split(",");
+    ctx.response.body = {"socket_servers" : socketServers};
+    ctx.response.status = 200
+  }
+
   // Routes
   const router = new Router();
   router.get("/", handleIndex);
   router.post("/", handlePost);
+  router.get("/servers", handleGetServers);
 
   app.use(router.routes());
   app.use(router.allowedMethods());
@@ -77,11 +86,7 @@ export function startSocketServer() {
 
   // New connection
   wss.on("connection", function (ws: WebSocketClient) {
-    logServer.info("New visitor connected, send list of the sockets servers");
-
-    //Envoi du premier message avec la liste des serveurs
-    // const message = {"socket_servers" : ["localhost:8080","127.0.0.1:8081","127.0.0.1:8082"]}
-    // ws.send(JSON.stringify(message));
+    logServer.info("New visitor connected");
 
     // A chaque message que l'on reçoit d'un client
     ws.on("message", function (message: string) {
@@ -106,6 +111,7 @@ export function startSocketServer() {
                 socketServers[i] = tmp;
               }
             }
+            Deno.env.set("SOCKETS_PRIORITY",socketServers.join(','))
             response["socket_servers"] = socketServers;
             // Retrieve secrets
             response["objects"].forEach((object:Record<string,any>) =>  {

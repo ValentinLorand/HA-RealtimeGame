@@ -32,7 +32,8 @@ docker-compose up --build
 ## Run tests
 ```
 cd HA-RealtimeGame
-deno test --allow-net
+export $(cat .env | sed 's/#.*//g' | xargs)
+deno test --allow-net --allow-env
 ```
 
 Developed by Leo Rolland and Valentin Lorand.
