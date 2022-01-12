@@ -16,6 +16,7 @@
     - `unknown_message`
     - `unknown_secret`
 - `<gamestate as json>`
+- `game_over` -> La partie est terminée
 
 Si une erreur est survenue, le message commence par `error`. 
 Dans tous les autres cas, envoie l'état courant de la partie sous format JSON.

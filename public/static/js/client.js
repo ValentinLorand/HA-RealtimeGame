@@ -1,3 +1,4 @@
+let lastReceivedData;
 /**
  * Get the list of sockets URIs (as a Promise)
  * Example :
@@ -46,14 +47,19 @@ function joinGame(sockets, socketIndex=0) {
   socket.onmessage = function(event) {
     console.log(`[message] Data received from server: ${event.data}`);
 
-    //If error received
+    // Handle non-JSON messages (according to Specification_sockets_messages.md)
     if (event.data.startsWith("error")) {
       const errCode = event.data.split(" ")[1]
       console.warn(`[error] server returned error code ${errCode}`)
       return
+    } else if (event.data.startsWith("game_over")) {
+      alert("Game Over! Winner is " + getWinner(lastReceivedData))
+      return
     }
-    //Else do the job
+    //Handle JSON message
     const data = JSON.parse(event.data)
+    // Store last received data 
+    lastReceivedData = data;
 
     sockets = data["socket_servers"]
     if("game" in data) {

@@ -70,6 +70,21 @@ export class GameWorld {
         return (this.objects.find(e => e instanceof Player && e.secret === secret) as Player);
     }
 
+    private handleMove(player: Player, potentielObjet: SimpleObject | undefined) {
+        if (potentielObjet instanceof Sweet) {
+            this.objects = this.objects.filter(o => o !== potentielObjet);
+            player.eatSweet();
+            this.generateSweets(1);
+            // Game ending
+            if (player.counter_sweet >= +(Deno.env.get("MAX_SCORE")!) ) {
+                this.gameOver()
+            }
+        //If there is a player, no move
+        }else if (potentielObjet instanceof Player) {
+            return
+        }
+    }
+
     /**
      * @param player The player ton move horizontally
      * @param move The number of unit to move [-dimension_x ; +dimension_x]
@@ -77,14 +92,7 @@ export class GameWorld {
     moveHorizontal(player: Player, move: number) {
         if (player.x + move < this.dimension_x && player.x + move >= 0) {
             const potentielObjet = this.getObjectFromPos(player.x + move, player.y);
-            if (potentielObjet instanceof Sweet) {
-                this.objects = this.objects.filter(o => o !== potentielObjet);
-                player.eatSweet();
-                this.generateSweets(1);
-            //If there is a player, no move
-            }else if (potentielObjet instanceof Player) {
-                return
-            }
+            this.handleMove(player, potentielObjet)
             player.moveHorizontal(move);
         }
     }
@@ -97,14 +105,7 @@ export class GameWorld {
     moveVertical(player: Player, move: number) {
         if (player.y + move < this.dimension_y && player.y + move >= 0) {
             const potentielObjet = this.getObjectFromPos(player.x, player.y + move);
-            if (potentielObjet instanceof Sweet) {
-                this.objects = this.objects.filter(o => o !== potentielObjet);
-                player.eatSweet();
-                this.generateSweets(1);
-            //If there is a player, no move
-            }else if (potentielObjet instanceof Player) {
-                return
-            }
+            this.handleMove(player, potentielObjet)
             player.moveVertical(move);
         }
     }
@@ -127,6 +128,17 @@ export class GameWorld {
      */
     reset() {
         this.objects = [];
+        this.generateSweets(5);
+    }
+
+    /**
+     * Reset the game, send a `game_over` message and keep players connected
+     */
+    gameOver() {
+        const players = this.getPlayers()
+        players.forEach(p => p.ws?.send(`game_over`))
+        players.forEach(p => p.counter_sweet = 0)
+        this.objects = players
         this.generateSweets(5);
     }
 

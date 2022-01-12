@@ -71,3 +71,7 @@ function render(state) {
     })
     
 }
+
+function getWinner(state) {
+    return state["objects"].filter(o => o.kind == "player").sort((p1, p2) => p1["counter_sweet"] - p2["counter_sweet"])[0]["name"]
+}
