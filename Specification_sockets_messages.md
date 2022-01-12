@@ -36,7 +36,7 @@ GET /servers
 }
 ```
 
-## Exemple de format JSON
+## Exemple de format JSON envoyé aux clients
 State : 
 ```json
 {
@@ -56,6 +56,42 @@ State :
             "x" : 0,
             "y" : 1,
             "counter_sweet" : 0,
+        },
+        {
+            "kind" : "sweet",
+            "x" : 5,
+            "y" : 6,
+        },
+        {
+            "kind" : "sweet",
+            "x" : 8,
+            "y" : 9,
+        },
+    ]
+}
+```
+
+## Exemple de format JSON échangé entre les serveurs
+State : 
+```json
+{
+    "game" : {
+        "dimension_x" : 20,
+        "dimension_y" : 20,
+    },
+    "socket_servers" : [
+        "127.0.0.1:8080",
+        "127.0.0.1:8081",
+        "127.0.0.1:8082"
+    ],
+    "objects" : [
+        {
+            "kind" : "player",
+            "name" : "Joueur1",
+            "x" : 0,
+            "y" : 1,
+            "counter_sweet" : 0,
+            "secret" : "WMYLVVAmxp",
         },
         {
             "kind" : "sweet",
