@@ -1,25 +1,31 @@
-// let websocketURI; DEFINE BEFORE IN HTML
-let websocketURI2;
-let websocketURI3;
+/**
+ * Get the list of sockets URIs (as a Promise)
+ * Example :
+ *  
+ *  Promise of :
+ *     [
+ *         "ws://127.0.0.1:8080",
+ *         "ws://127.0.0.1:8081",
+ *         "ws://127.0.0.1:8082"
+ *     ]
+ * 
+ */
+const getServers = () => fetch('/servers')
+  .then(r => r.json())
+  .then(json => json['socket_servers'])
 
-function updateSocketsURIs(URIs) {
-  if(websocketURI !== `${URIs[0]}`) {
-    websocketURI=`${URIs[0]}`;
-    console.log(`WebSocket server updated ! We need to create a new WebSocket tunnel`);
-  }
-  websocketURI2=`${URIs[1]}`;
-  websocketURI3=`${URIs[2]}`;
-}
-
-function joinGame($event) {
+function joinGame(sockets, socketIndex=0) {
 
   let nickname = getCookie("nickname")
   let secret = getCookie("secret")
-  // console.log(websocketURI);
-  const socket = new WebSocket(websocketURI);
+
+  // Establish a WebSocket connection
+  const socketURI = sockets[socketIndex % sockets.length]
+  console.log(`Connecting to ${socketURI} ...`)
+  const socket = new WebSocket(socketURI);
 
   socket.onopen = function(e) {
-
+    console.log(`WebSocket connection established!`)
     if (secret != "" && nickname != "") {
       console.log(`Found cookie, using nickname ${nickname} and secret ${secret}`)
       socket.send(`${secret} get_state`)
@@ -49,7 +55,7 @@ function joinGame($event) {
     //Else do the job
     const data = JSON.parse(event.data)
 
-    updateSocketsURIs(data["socket_servers"]);
+    sockets = data["socket_servers"]
     if("game" in data) {
       render(data);
     }
@@ -62,14 +68,19 @@ function joinGame($event) {
       // e.g. server process killed or network down
       // event.code is usually 1006 in this case
       console.error('[close] Connection died');
+      // TODO : check if connection closed expectedly
+      joinGame(sockets, socketIndex + 1);
     }
   };
 
   socket.onerror = function(event) {
     console.warn(`Error occured with current websocket, trying to connect to the next WebSocket URI`);
-    websocketURI = websocketURI2;
-    joinGame();
+    joinGame(sockets, socketIndex + 1);
   }
 }
 
-if (getCookie("nickname") && getCookie("secret")) joinGame()
+const connect = () => {
+  getServers().then(joinGame)
+}
+
+if (getCookie("nickname") && getCookie("secret")) connect()

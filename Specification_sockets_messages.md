@@ -24,13 +24,14 @@ Ensuite, il attends des messages de clients
 Lorsqu'il reçoit un message d'un client, il met à jour son état interne.
 
 
-## Exemple de première réponse
+## Récupération de la liste des serveurs
+GET /servers
 ```json
 {
-"socket_servers" : [
-        "127.0.0.1:8080",
-        "127.0.0.1:8081",
-        "127.0.0.1:8082"
+    "socket_servers" : [
+        "ws://127.0.0.1:8080",
+        "ws://127.0.0.1:8081",
+        "ws://127.0.0.1:8082"
     ]
 }
 ```

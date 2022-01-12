@@ -31,14 +31,13 @@
     </p>
     <div id="joinForm">
       <input id="nickname" type="text" placeholder="Nickname">
-      <button onclick="joinGame()">Join game</button>
+      <button onclick="connect()">Join game</button>
       <button onclick="clearCookies()">Clear cookies</button>
     </div>
     <svg id="cont" height="600" width="600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
     <table id="scoreboard"></table>
   </body>
   <footer>
-    <script>var websocketURI='<%= socketServer %>';</script>
     <script src="/static/js/cookieHelper.js"></script>
     <script src="/static/js/game.js"></script>
     <script src="/static/js/eventListeners.js"></script>
