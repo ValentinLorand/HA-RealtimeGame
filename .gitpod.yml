@@ -1,10 +1,21 @@
 image:
   file: .gitpod.Dockerfile
 tasks:
-  - name: Start server
-    command: export GITPOD_INTEGRATION=true && export $(cat .env | sed 's/#.*//g' | xargs) && deno run --allow-net --allow-read --allow-env --watch src/server.ts
+  - name: Start 3 servers
+    command: export GITPOD_INTEGRATION=true && docker-compose up --build
 ports:
   - port: 8000
     onOpen: open-preview
+  - port: 8001
+    onOpen: ignore
+  - port: 8001
+    onOpen: ignore
   - port: 8080
     onOpen: ignore
+  - port: 8081
+    onOpen: ignore
+  - port: 8082
+    onOpen: ignore
+vscode:
+  extensions:
+    - ms-azuretools.vscode-docker

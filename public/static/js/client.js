@@ -22,7 +22,10 @@ function joinGame(sockets, socketIndex=0) {
 
   // Establish a WebSocket connection
   let socketURI = sockets[socketIndex % sockets.length]
-  if (GITPOD_INTEGRATION) socketURI = `wss://${location.host.replace('8000', '8080')}`
+  if (GITPOD_INTEGRATION) {
+    const targetPort = socketURI.split(':').at(-1)
+    socketURI = location.host.replace(/^[0-9]*/g, `wss://${targetPort}`)
+  }
   console.log(`Connecting to ${socketURI} ...`)
   // If using a Gitpod context, override the provided server address by Gitpod Ingress (and WSS)
   const socket = new WebSocket(socketURI);
