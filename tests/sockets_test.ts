@@ -41,7 +41,7 @@ Deno.test({
     const open = on(socket, "open");
     await open.next();
     await socket.send('secret join_game valentin');
-    await delay(300);
+    await delay(400);
     const testNbPlayerBetween = GameWorldInstance.getPlayers().length;
 
     // Player 2 join the game
@@ -49,7 +49,7 @@ Deno.test({
     const open2 = on(socket2, "open");
     await open2.next();
     await socket2.send('secret2 join_game leo'); // BUG : One websocket can join 2 time the same game
-    await delay(300);
+    await delay(400);
     const testNbPlayerAfter = GameWorldInstance.getPlayers().length;
     
     assertEquals(testNbPlayerBefore,0);
@@ -73,7 +73,7 @@ Deno.test({
     const open = on(socket, "open");
     await open.next();
     await socket.send('unknown_secret_toto get_state');
-    await delay(300);
+    await delay(400);
     // Expect correct error message
     let counter = 0;
     socket.on("message", m => {
@@ -99,7 +99,7 @@ Deno.test({
     const open = on(socket, "open");
     await open.next();
     await socket.send('secret join_game valentin');
-    await delay(300);
+    await delay(400);
 
     let player = GameWorldInstance.getPlayerFromSecret("secret");
     assertExists(player);
@@ -110,7 +110,7 @@ Deno.test({
 
     // The player wants to move up
     socket.send('secret ask_move_up');
-    await delay(300);
+    await delay(400);
     player = GameWorldInstance.getPlayerFromSecret("secret");
     assertExists(player);
     assertEquals(player.name,"valentin");
@@ -139,7 +139,7 @@ Deno.test({
     const open = on(socket, "open");
     await open.next();
     socket.send('secret join_game vallelorand');
-    await delay(300);
+    await delay(400);
 
     let player = GameWorldInstance.getPlayerFromSecret("secret");
     assertExists(player);
@@ -150,7 +150,7 @@ Deno.test({
 
     // The player wants to move down
     socket.send('secret ask_move_down');
-    await delay(300);
+    await delay(400);
     player = GameWorldInstance.getPlayerFromSecret("secret");
     assertExists(player);
     const x2 = player.x
@@ -178,7 +178,7 @@ Deno.test({
     const open = on(socket, "open");
     await open.next();
     socket.send('secret join_game valentin');
-    await delay(300);
+    await delay(400);
 
     let player = GameWorldInstance.getPlayerFromSecret("secret");
     assertExists(player);
@@ -189,7 +189,7 @@ Deno.test({
 
     // The player wants to move left
     socket.send('secret ask_move_left');
-    await delay(300);
+    await delay(400);
     player = GameWorldInstance.getPlayerFromSecret("secret");
     assertExists(player);
     const x2 = player.x
@@ -217,7 +217,7 @@ Deno.test({
     const open = on(socket, "open");
     await open.next();
     socket.send('secret join_game valentin');
-    await delay(300);
+    await delay(400);
 
     let player = GameWorldInstance.getPlayerFromSecret("secret");
     assertExists(player);
@@ -228,7 +228,7 @@ Deno.test({
 
     // The player wants to move right
     socket.send('secret ask_move_right');
-    await delay(300);
+    await delay(400);
     player = GameWorldInstance.getPlayerFromSecret("secret");
     assertExists(player);
     const x2 = player.x
