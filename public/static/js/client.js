@@ -21,8 +21,10 @@ function joinGame(sockets, socketIndex=0) {
   let secret = getCookie("secret")
 
   // Establish a WebSocket connection
-  const socketURI = sockets[socketIndex % sockets.length]
+  let socketURI = sockets[socketIndex % sockets.length]
+  if (GITPOD_INTEGRATION) socketURI = `wss://${location.host.replace('8000', '8080')}`
   console.log(`Connecting to ${socketURI} ...`)
+  // If using a Gitpod context, override the provided server address by Gitpod Ingress (and WSS)
   const socket = new WebSocket(socketURI);
 
   socket.onopen = function(e) {

@@ -20,7 +20,6 @@
   </head>
   <body>
     <h1>Welcome to Eat My Sweet</h1>
-    <h3> Serveur socket cible : <%= socketServer %></h3>
     <p>
       A basic game made with constraints for distributed systems's course at ESIR :
       <ul>
@@ -38,6 +37,10 @@
     <table id="scoreboard"></table>
   </body>
   <footer>
+    <script>
+      // Use the current browser URL's hostname instead of the one sent by server
+      var GITPOD_INTEGRATION = '<%= GITPOD_INTEGRATION %>' === 'true'
+    </script>
     <script src="/static/js/cookieHelper.js"></script>
     <script src="/static/js/game.js"></script>
     <script src="/static/js/eventListeners.js"></script>

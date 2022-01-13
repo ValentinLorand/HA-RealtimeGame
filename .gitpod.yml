@@ -2,7 +2,7 @@ image:
   file: .gitpod.Dockerfile
 tasks:
   - name: Start server
-    command: export $(cat .env | sed 's/#.*//g' | xargs) && deno run --allow-net --allow-read --allow-env --watch src/server.ts
+    command: export GITPOD_INTEGRATION=true && export $(cat .env | sed 's/#.*//g' | xargs) && deno run --allow-net --allow-read --allow-env --watch src/server.ts
 ports:
   - port: 8000
     onOpen: open-preview

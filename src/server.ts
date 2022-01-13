@@ -30,7 +30,8 @@ export async function startWebServer() {
     ctx.response.body = await renderFile(
       `${Deno.cwd()}/public/views/index.ejs`,
       {
-        socketServer: Deno.env.get("SOCKET_URL"),
+        // Use the current browser URL's hostname instead of the one sent by server
+        GITPOD_INTEGRATION: Deno.env.get("GITPOD_INTEGRATION") || false ,
       },
     );
   }
