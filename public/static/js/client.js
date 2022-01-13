@@ -81,7 +81,7 @@ function joinGame(sockets, socketIndex=0) {
 
   socket.onerror = function(event) {
     console.warn(`Error occured with current websocket, trying to connect to the next WebSocket URI`);
-    joinGame(sockets, socketIndex + 1);
+    socket.close()
   }
 }
 
