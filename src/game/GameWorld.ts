@@ -70,7 +70,7 @@ export class GameWorld {
         return (this.objects.find(e => e instanceof Player && e.secret === secret) as Player);
     }
 
-    private handleMove(player: Player, potentielObjet: SimpleObject | undefined) {
+    private handleMove(player: Player, potentielObjet: SimpleObject | undefined) :boolean {
         if (potentielObjet instanceof Sweet) {
             this.objects = this.objects.filter(o => o !== potentielObjet);
             player.eatSweet();
@@ -78,11 +78,13 @@ export class GameWorld {
             // Game ending
             if (player.counter_sweet >= +(Deno.env.get("MAX_SCORE")!) ) {
                 this.gameOver()
+                return false
             }
         //If there is a player, no move
         }else if (potentielObjet instanceof Player) {
-            return
+            return false
         }
+        return true
     }
 
     /**
@@ -92,8 +94,8 @@ export class GameWorld {
     moveHorizontal(player: Player, move: number) {
         if (player.x + move < this.dimension_x && player.x + move >= 0) {
             const potentielObjet = this.getObjectFromPos(player.x + move, player.y);
-            this.handleMove(player, potentielObjet)
-            player.moveHorizontal(move);
+            if(this.handleMove(player, potentielObjet))
+                player.moveHorizontal(move);
         }
     }
 
@@ -105,8 +107,8 @@ export class GameWorld {
     moveVertical(player: Player, move: number) {
         if (player.y + move < this.dimension_y && player.y + move >= 0) {
             const potentielObjet = this.getObjectFromPos(player.x, player.y + move);
-            this.handleMove(player, potentielObjet)
-            player.moveVertical(move);
+            if(this.handleMove(player, potentielObjet))
+                player.moveVertical(move);
         }
     }
 
