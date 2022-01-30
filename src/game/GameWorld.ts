@@ -77,7 +77,7 @@ export class GameWorld {
             this.generateSweets(1);
             // Game ending
             if (player.counter_sweet >= +(Deno.env.get("MAX_SCORE")!) ) {
-                this.gameOver()
+                this.gameOver(player)
                 return false
             }
         //If there is a player, no move
@@ -136,9 +136,9 @@ export class GameWorld {
     /**
      * Reset the game, send a `game_over` message and keep players connected
      */
-    gameOver() {
+    gameOver(winner: Player) {
         const players = this.getPlayers()
-        players.forEach(p => p.ws?.send(`game_over`))
+        players.forEach(p => p.ws?.send(`game_over ${winner.name}`))
         players.forEach(p => p.counter_sweet = 0)
         this.objects = players
         this.generateSweets(5);

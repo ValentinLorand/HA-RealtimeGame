@@ -58,7 +58,8 @@ function joinGame(sockets, socketIndex=0) {
       console.warn(`[error] server returned error code ${errCode}`)
       return
     } else if (event.data.startsWith("game_over")) {
-      alert("Game Over! Winner is " + getWinner(lastReceivedData))
+      let winnerName = event.data.split('game_over ')[1]
+      alert("Game Over! Winner is " + winnerName)
       return
     }
     //Handle JSON message
