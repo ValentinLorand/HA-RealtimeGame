@@ -1,3 +1,5 @@
+const serverEl = document.getElementById('server')
+
 let lastReceivedData;
 /**
  * Get the list of sockets URIs (as a Promise)
@@ -26,12 +28,12 @@ function joinGame(sockets, socketIndex=0) {
     const targetPort = socketURI.split(':').at(-1)
     socketURI = location.host.replace(/^[0-9]*/g, `wss://${targetPort}`)
   }
-  console.log(`Connecting to ${socketURI} ...`)
+  serverEl.innerText = `Connecting to ${socketURI} ...`
   // If using a Gitpod context, override the provided server address by Gitpod Ingress (and WSS)
   const socket = new WebSocket(socketURI);
 
   socket.onopen = function(e) {
-    console.log(`WebSocket connection established!`)
+    serverEl.innerText = `Websocket successfully connected to ${socketURI}`
     if (secret != "" && nickname != "") {
       console.log(`Found cookie, using nickname ${nickname} and secret ${secret}`)
       socket.send(`${secret} get_state`)
@@ -50,12 +52,17 @@ function joinGame(sockets, socketIndex=0) {
   };
   
   socket.onmessage = function(event) {
-    console.log(`[message] Data received from server: ${event.data}`);
-
     // Handle non-JSON messages (according to Specification_sockets_messages.md)
     if (event.data.startsWith("error")) {
       const errCode = event.data.split(" ")[1]
-      console.warn(`[error] server returned error code ${errCode}`)
+      switch (errCode) {
+        case 'unknown_secret':
+          clearCookies()
+          location.reload();
+          break;
+        default:
+          console.warn(`[error] server returned error code ${errCode}`)
+      }
       return
     } else if (event.data.startsWith("game_over")) {
       let winnerName = event.data.split('game_over ')[1]
@@ -86,7 +93,7 @@ function joinGame(sockets, socketIndex=0) {
   };
 
   socket.onerror = function(event) {
-    console.warn(`Error occured with current websocket, trying to connect to the next WebSocket URI`);
+    serverEl.innerText = `Error occured with current websocket, trying to connect to the next WebSocket URI`
     socket.close()
   }
 }

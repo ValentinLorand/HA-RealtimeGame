@@ -54,6 +54,7 @@ export function manageIdentification(message: String, ws: WebSocketClient, gamew
       }
     } else {
       log.warning("Unknown player, secret=" + raw[0]);
+      ws.send(`error unknown_secret`)
       return undefined;
     }
   } else {
